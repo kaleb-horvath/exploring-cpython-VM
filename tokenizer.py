@@ -3,11 +3,7 @@ Purpose
 --------
 This module holds the required types and functions to lexically analyze
 a quickLi expression in the form of a string (file or otherwise). Employing
-regex to minimize code. Note, a quickLi program is actually one quickLi expression.
-This means the notion of 'lines' is abstract and of no concern to the compiler, so
-long as whitespace is used between procedures and operands. These abstract lines
-are determined by the use of line-break in the source string. Additionally, there
-are zero syntax exceptions.
+regex to minimize code. 
 """
 import sys, os, re
 
@@ -35,42 +31,70 @@ def load_source (reference, file=True):
     # format the 'lines' of the quickLi expression (redundant replace calls?)
     source_string = ' '.join([l.strip() for l in lines if ';' not in l and not (l.isspace() or l == '')])\
         .replace('\t', '')\
-        .replace('\n', '')
+        .replace('\n', '')\
+        .replace('(', ' ( ').replace(')', ' ) ')
     
     return source_string
 
 
 def tokenize_source (source_string):
     """Tokenize a valid quickLi expression string with spaces between
-    every symbol (procedures and operands built-in or otherwise) by seperating
-    surrounding parenthesis and stepping through each element.
+    every symbol (procedures and operands built-in or otherwise).
 
-    NOTE: EOF checks are not necessary, abstracted away by load_source function.
+    NOTE: EOF and null-terminators are not necessary, abstracted away by load_source function. 
 
     :param source_string: quickLi expression string
     :type source_string: str
     :return: 'stream' (list) of valid tokens ready to be parsed     
     """
-    tokens = source_string.replace('(', ' ( ').replace(')', ' ) ').split()
-    formatted_tokens = []
+    tokens = source_string.split()
     lexer = re.compile(
         r"""\s*(,@|[('`,)]|"(?:[\\].|[^\\"])*"|;.*|[^\s('"`,;)]*)(.*)"""
     )
-
     return tokens
 
 
 
-source = '''(begin
-
-                        (add 1 2)
-
-  )
+    
 
 
 
+source = '''
+(begin 
+    (define nth (lambda (n l)
+        (if (null? l) nil
+        (if (eq? n 0) (car l) (nth (- n 1) (cdr l))))))
+    
+    (define combine (lambda (proc)
+        (lambda (x y)
+            (if (null? x) (quote ())
+                (proc (list (car x) (car y))
+                    ((combine proc) (cdr x) (cdr y)))))))
+    (define zip (combine cons))
+
+    (define inter (lambda (l1 l2)
+        (cond ((null? l1) nil) 
+              ((member? (car l1) l2) 
+                (cons (car l1) (inter (cdr l1) l2)))
+              (inter (cdr l1) l2) )))
+
+    ;; linear recursion, quite slow and will grow the stack 
+    ;; arbitrarily if you do not use tail calls
+    (define slow-reverse (lambda (l)
+        (if (null? l) nil 
+        (+ (slow-reverse (cdr l)) (cons (car l) nil)))))
 
 
+
+    ;; much faster implementation using an accumulator
+    ;; and a tail recursive procedure call
+    ;; (with tail call, we do not have to wait for the child routines to converge)
+    (define fast-reverse (lambda (l a)
+        (if (null? l) a
+        (fast-reverse (cdr l) (cons (car l) a)))))
+
+    (fast-reverse (list 1 2 3 4 5 6 7 8 9 1 2 4 5 6 7) nil)
+)
 '''
 test = load_source(source, file=False)
 toks = tokenize_source(test)
