@@ -4,9 +4,10 @@ a super quick language implementation eerily similar to such languages as Lisp a
 *the compiler itself is written in Python in my style which is very procedural. at this stage, the focus is to make it as portable as possible and write the minimum amount of code required to get the implementation off the ground*
 
 ### initial objectives
-1. working lexer and parser on repl (keeping in mind safety and exception handling)
+1. Naive lexer and parser on repl (keeping in mind safety and exception handling)
 
 ### future goals
+* robust logging functionality and error types (sub-class of Exception possibly? pre-set error messages?)
 * stack tracing functionality to assist in debugging
 * cache-aware parser
 * built-in time profile tool
