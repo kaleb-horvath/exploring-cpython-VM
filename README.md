@@ -7,6 +7,7 @@ a super quick language implementation eerily similar to such languages as Lisp a
 1. Naive lexer and parser on repl (keeping in mind safety and exception handling)
 
 ### future goals
+* robust regex integration 
 * robust logging functionality and error types (sub-class of Exception possibly? pre-set error messages?)
 * stack tracing functionality to assist in debugging
 * cache-aware parser
