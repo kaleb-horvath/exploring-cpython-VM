@@ -7,10 +7,11 @@ a super quick language implementation eerily similar to such languages as Lisp a
 1. Naive lexer and parser on repl (keeping in mind safety and exception handling)
 
 ### future goals
-*  implement syntax exceptions and string literals into lex regex pattern r"""\s*(,@|[('`,)]|"(?:[\\].|[^\\"])*"|;.*|[^\s('"`,;)]*)(.*)"""
+*  implement syntax exceptions and string literals into lex regex pattern 
 * robust regex integration 
 * robust logging functionality and error types (sub-class of Exception possibly? pre-set error messages?) as opposed to sys.exit('msg')
 * stack tracing functionality to assist in debugging
 * cache-aware parser
 * built-in time profile tool
 * tail-call optimization to eliminate CPython stack overflow due to excessive recursions
+* built-in parallelism

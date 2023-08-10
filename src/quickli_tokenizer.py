@@ -28,6 +28,8 @@ def load_source (reference, file=True):
     else:
         lines = reference.split('\n')
 
+    return lines
+
 
 
 def tokenize_source (lines):
