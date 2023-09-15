@@ -31,7 +31,6 @@ def load_source (reference, file=True):
     return lines
 
 
-
 def tokenize_source (lines):
     """Ingest list of lines of a quickLi program/expression.
     Convert lines to a valid quickLi expression string with spaces between
